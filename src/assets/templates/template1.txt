@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Resume - Template</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+  body {
+    font-family: "Inter", sans-serif;
+    margin: 0;
+    padding: 15px;
+    background: #fafafa;
+    color: #2d2d2d;
+    line-height: 1.38;
+  }
+
+  .container {
+    max-width: 880px;
+    margin: auto;
+    padding: 20px 22px;
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid #e2e2e2;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 14px;
+  }
+
+  .header h1 {
+    margin: 0;
+    font-size: 27px;
+    font-weight: 800;
+  }
+
+  .contact {
+    font-size: 13.5px;
+    margin-top: 6px;
+    font-weight: 500;
+  }
+
+  .contact a {
+    color: #0E5484;
+    text-decoration: none;
+  }
+
+  /* Sections */
+  h2 {
+    margin: 18px 0 10px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #0E5484;
+    padding-bottom: 3px;
+    border-bottom: 2px solid #0E5484;
+  }
+
+  p {
+    margin: 0 0 5px;
+    font-size: 14px;
+  }
+
+  ul {
+    padding-left: 16px;
+    margin: 4px 0;
+  }
+
+  li {
+    margin-bottom: 4px;
+    font-size: 14px;
+  }
+
+  /* Job blocks */
+  .job {
+    margin-bottom: 12px;
+  }
+
+  .job-title {
+    font-size: 15.5px;
+    font-weight: 700;
+    margin-bottom: 2px;
+  }
+
+  .company {
+    font-size: 13.5px;
+    color: #555;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .duration {
+    float: right;
+    font-size: 12.8px;
+    font-weight: 600;
+  }
+
+  .clearfix { clear: both; }
+
+  a {
+    color: #0E5484;
+    font-weight: 600;
+  }
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>FULL NAME HERE</h1>
+    <div class="contact">
+      <i class="fa fa-phone"></i> +91 0000000000 &nbsp; | &nbsp;
+      <a href="mailto:email@example.com"><i class="fa fa-envelope"></i> email@example.com</a> 
+      &nbsp; | &nbsp; <i class="fa fa-map-marker-alt"></i> City, State <br>
+      <a href="https://linkedin.com/in/your-profile"><i class="fa-brands fa-linkedin"></i> LinkedIn</a> &nbsp; | &nbsp;
+      <a href="https://github.com/your-github"><i class="fa-brands fa-github"></i> GitHub</a>
+    </div>
+  </div>
+
+  <!-- SUMMARY -->
+  <h2>PROFESSIONAL SUMMARY</h2>
+  <p>
+    Write a short 3–4 line summary about your expertise, experience, and what you bring to the table.
+  </p>
+
+  <!-- SKILLS -->
+  <h2>TECHNICAL SKILLS</h2>
+  <ul>
+    <li><b>Languages:</b> List here…</li>
+    <li><b>Frameworks:</b> List here…</li>
+    <li><b>Tools:</b> List here…</li>
+    <li><b>Other:</b> List here…</li>
+  </ul>
+
+  <!-- EXPERIENCE -->
+  <h2>WORK EXPERIENCE</h2>
+
+  <div class="job">
+    <div class="job-title">
+      Job Title Here
+      <span class="duration">Start – End</span>
+    </div>
+    <div class="company">Company Name, Location</div>
+    <ul>
+      <li>Key achievement or responsibility.</li>
+      <li>Key achievement or responsibility.</li>
+      <li>Key achievement or responsibility.</li>
+    </ul>
+  </div>
+
+  <div class="job">
+    <div class="job-title">
+      Job Title Here
+      <span class="duration">Start – End</span>
+    </div>
+    <div class="company">Company Name, Location</div>
+    <ul>
+      <li>Key achievement or responsibility.</li>
+      <li>Key achievement or responsibility.</li>
+      <li>Key achievement or responsibility.</li>
+    </ul>
+  </div>
+
+  <!-- PROJECTS -->
+  <h2>PROJECTS</h2>
+  <ul>
+    <li>
+      <b><a href="#">Project Title / Link</a></b> — Short description about the project.  
+      <br><b>Stack:</b> List tech stack used.
+    </li>
+
+    <li>
+      <b><a href="#">Project Title / Link</a></b> — Short description.  
+      <br><b>Stack:</b> List tech stack.
+    </li>
+  </ul>
+
+  <!-- EDUCATION -->
+  <h2>EDUCATION</h2>
+  <ul>
+    <li>
+      <b>College / University Name</b>, Location  
+      Degree Name (Percentage / GPA)  
+      <span style="font-size:13px;">Year – Year</span>
+    </li>
+  </ul>
+
+  <!-- LANGUAGES -->
+  <h2>LANGUAGES</h2>
+  <ul>
+    <li>English, Hindi, etc.</li>
+  </ul>
+
+</div>
+
+</body>
+</html>

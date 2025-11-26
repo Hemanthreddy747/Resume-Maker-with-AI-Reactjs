@@ -1,0 +1,45 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin:0;
+  padding:0;
+}
+
+.App {
+  min-height: 100vh;
+}
+
+/* Global toast customization */
+.Toastify__toast-container {
+  z-index: 9999;
+}
+
+.Toastify__toast {
+  border-radius: 12px;
+  font-family: inherit;
+}
+
+.Toastify__toast--success {
+  background: linear-gradient(45deg, #4caf50, #45a049);
+}
+
+.Toastify__toast--error {
+  background: linear-gradient(45deg, #f44336, #d32f2f);
+}
+
+.Toastify__toast--warning {
+  background: linear-gradient(45deg, #ff9800, #f57c00);
+}
+
+.Toastify__toast--info {
+  background: linear-gradient(45deg, #2196f3, #1976d2);
+}

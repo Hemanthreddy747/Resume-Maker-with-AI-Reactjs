@@ -1,0 +1,200 @@
+:root {
+  --templates-gap: 18px;
+  --template-radius: 10px;
+  --template-bg: #ffffff;
+  --card-shadow: 0 6px 18px rgba(20, 20, 30, 0.06);
+  --template-border: rgba(15, 15, 20, 0.06);
+  --template-border-hover: rgba(33, 150, 243, 0.92);
+  --template-border-hover-width: 3px;
+}
+
+.templates-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--templates-gap);
+  align-items: start;
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 8px;
+}
+
+.template-item {
+  position: relative;
+  background: var(--template-bg);
+  border-radius: var(--template-radius);
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 210 / 297; /* A4 preview ratio */
+  width: 100%;
+  transition: transform 220ms ease, box-shadow 220ms ease;
+  box-shadow: var(--card-shadow);
+  border: 1px solid var(--template-border);
+  transition: transform 220ms ease, box-shadow 220ms ease, border 200ms ease;
+}
+
+.template-item:focus {
+  outline: 3px solid rgba(33, 150, 243, 0.12);
+  outline-offset: 4px;
+}
+
+.template-item:hover {
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: 0 12px 30px rgba(20, 20, 30, 0.09);
+  border: var(--template-border-hover-width) solid var(--template-border-hover);
+}
+
+/* Selected state should also show the thicker highlight border */
+.template-item.selected {
+  border: var(--template-border-hover-width) solid var(--template-border-hover);
+  box-shadow: 0 14px 34px rgba(20, 20, 30, 0.12);
+}
+
+.template-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* fill tile nicely */
+  display: block;
+  background-color: var(--template-bg);
+}
+
+.template-item .template-preview {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: hidden;
+  background-color: var(--template-bg);
+}
+
+/* Badge and title */
+.template-badge {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  padding: 6px 9px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.template-footer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.22) 100%
+  );
+  color: #fff;
+  gap: 8px;
+}
+
+.template-title {
+  font-size: 13px;
+  font-weight: 600;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.template-subtitle {
+  font-size: 11px;
+  opacity: 0.95;
+  margin-top: 4px;
+  font-weight: 500;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+}
+
+/* Ensure footer text is readable on any preview image color */
+.template-footer > div {
+  display: inline-block;
+  /* slightly lighter backdrop and smaller padding so it blends more */
+  background: rgba(0, 0, 0, 0.36);
+  padding: 6px 8px;
+  border-radius: 8px;
+  position: relative;
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px); /* reduce blur for subtler blend */
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.22);
+}
+
+.template-footer > div::after {
+  /* much subtler blurred ring so the footer doesn't pop out */
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 10px;
+  pointer-events: none;
+  background: transparent;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.18);
+  filter: blur(4px);
+  z-index: -1;
+}
+
+.template-title,
+.template-subtitle {
+  color: #fff; /* force white text for best contrast */
+}
+
+/* make badge stay visible on light backgrounds */
+.template-badge {
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+}
+
+.template-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.template-actions button {
+  background: rgba(255, 255, 255, 0.12);
+  border: none;
+  color: #fff;
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+/* Hide native scrollbars where possible */
+.template-item .template-preview,
+.template-item img {
+  -ms-overflow-style: none; /* IE/Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.template-item .template-preview::-webkit-scrollbar {
+  display: none; /* WebKit */
+}
+
+@media (max-width: 980px) {
+  .templates-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+    padding: 6px;
+  }
+}
+
+@media (max-width: 520px) {
+  .templates-grid {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+  }
+  .template-item {
+    border-radius: 8px;
+    aspect-ratio: 210 / 297;
+    max-height: 360px;
+  }
+  .template-footer {
+    padding: 8px 10px;
+  }
+}
