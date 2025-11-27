@@ -24,11 +24,24 @@ const Landing = () => {
 
   return (
     <div className="landing-root">
-      <header className="lm-navbar">
+      <header className="lm-navbar" role="banner">
         <div className="container navbar-inner">
-          <div className="brand">resumemaker</div>
+          <a className="brand" href="/" aria-label="ResumeMaker home">
+            <svg
+              width="30"
+              height="30"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <rect width="24" height="24" rx="6" fill="#0b5fff" />
+              <path d="M7 15V9l5-2v10l-5-2z" fill="white" opacity="0.95" />
+            </svg>
+            <span className="brand-text">ResumeMaker</span>
+          </a>
 
-          <nav className="nav-desktop">
+          <nav className="nav-desktop" role="navigation" aria-label="Main">
             <ul className="nav-links">
               <li>
                 <button className="nav-link" onClick={scrollToTemplates}>
@@ -41,8 +54,8 @@ const Landing = () => {
                 </a>
               </li>
               <li>
-                <a className="nav-link" href="#pricing">
-                  Pricing
+                <a className="nav-link" href="#howitworks">
+                  How it works
                 </a>
               </li>
             </ul>
@@ -52,6 +65,7 @@ const Landing = () => {
             <button
               className="btn btn-ghost"
               onClick={() => setShowLogin(true)}
+              aria-haspopup="dialog"
             >
               Sign in
             </button>
@@ -60,19 +74,39 @@ const Landing = () => {
             </button>
           </div>
 
-          {/* Mobile menu button */}
           <div className="mobile-menu">
             <button
-              className="hamburger"
-              aria-label="Toggle menu"
+              className="mobile-toggle"
+              aria-expanded={menuOpen}
+              aria-label={menuOpen ? "Close menu" : "Open menu"}
               onClick={() => setMenuOpen((s) => !s)}
             >
-              <span className={"hamburger-box"} />
+              <span className="sr-only">Toggle navigation</span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                {menuOpen ? (
+                  <path
+                    d="M6 6L18 18M6 18L18 6"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                ) : (
+                  <path
+                    d="M3 12H21M3 6H21M3 18H21"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                )}
+              </svg>
             </button>
           </div>
         </div>
+
         {menuOpen && (
-          <div className="mobile-drawer">
+          <div className="mobile-drawer" role="dialog" aria-modal="true">
             <ul>
               <li>
                 <button
@@ -97,10 +131,10 @@ const Landing = () => {
               <li>
                 <a
                   className="nav-link"
-                  href="#pricing"
+                  href="#howitworks"
                   onClick={() => setMenuOpen(false)}
                 >
-                  Pricing
+                  How it works
                 </a>
               </li>
               <li className="mobile-actions">
@@ -129,43 +163,47 @@ const Landing = () => {
       </header>
 
       {editingTemplate === null && (
-        <section className="hero-section">
+        <section className="hero-section" aria-labelledby="hero-title">
           <div className="container hero-inner">
             <div className="hero-left">
-              <div className="eyebrow">New</div>
-              <h1 className="hero-title">Resumes that open doors</h1>
+              <div className="eyebrow">Build confidently</div>
+              <h1 id="hero-title" className="hero-title">
+                Modern resumes — crafted for hiring managers and ATS
+              </h1>
               <p className="hero-sub">
-                Turn your experience into a stunning, ATS-friendly resume in
-                minutes. Choose a template, edit inline, and export a polished
-                PDF.
+                Create a clean, professional resume in minutes. Pick a template,
+                tailor sections, and export a print-ready PDF with one click.
               </p>
 
               <div className="hero-ctas">
                 <button
                   className="btn btn-gradient btn-lg"
-                  // onClick={() => setShowLogin(true)}
                   onClick={scrollToTemplates}
                 >
-                  Create Resume — It's free
+                  Start for free
                 </button>
-                <button className="btn btn-ghost" onClick={scrollToTemplates}>
-                  Explore Templates
+                <button className="btn btn-outline" onClick={scrollToTemplates}>
+                  Browse templates
                 </button>
               </div>
 
               <div className="hero-features">
-                <div className="feature-pill">ATS-friendly</div>
-                <div className="feature-pill">One-click PDF</div>
-                <div className="feature-pill">Modern designs</div>
+                <div className="feature-pill">ATS-ready</div>
+                <div className="feature-pill">Smart sections</div>
+                <div className="feature-pill">PDF export</div>
               </div>
             </div>
 
             <div className="hero-right">
               <div className="hero-preview">
                 <div className="preview-frame">
-                  <img src={heroImg} alt="resume preview" />
+                  <img src={heroImg} alt="Resume templates preview" />
                 </div>
                 <div className="preview-badge">Templates • Free</div>
+              </div>
+              <div className="trust-row">
+                <div className="trust-item">Trusted by 50k+ professionals</div>
+                <div className="trust-item">PDF export • Print-ready</div>
               </div>
             </div>
           </div>
@@ -190,7 +228,6 @@ const Landing = () => {
               onBack={() => {
                 setEditingTemplate(null);
                 setEditingTemplateData(null);
-                // scroll back to templates
                 if (templatesRef.current) {
                   templatesRef.current.scrollIntoView({
                     behavior: "smooth",
@@ -203,9 +240,11 @@ const Landing = () => {
         )}
       </main>
 
-      <footer className="site-footer">
+      <footer className="site-footer" role="contentinfo">
         <div className="container footer-inner">
-          <div>© {new Date().getFullYear()} resumemaker</div>
+          <div className="brand-small">
+            © {new Date().getFullYear()} ResumeMaker
+          </div>
           <div className="footer-links">
             <a href="/privacy">Privacy</a>
             <a href="/terms">Terms</a>
