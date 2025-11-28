@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import jsPDF from "jspdf";
 
@@ -13,14 +13,17 @@ import t7 from "../assets/template7.jpg";
 import t8 from "../assets/template8.jpg";
 import t9 from "../assets/template9.jpg";
 
+// EditResume: component to edit resume data, generate HTML via AI, preview and export PDF
 const EditResume = ({ templateIndex = null, templateData = null, onBack }) => {
-  const [data, setData] = useState({
+  // Personal information state
+  const [personal, setPersonal] = useState({
     name: "",
     title: "",
     email: "",
     phone: "",
   });
 
+  // Sections (Experience, Education, Skills, etc.)
   const [sections, setSections] = useState([
     { header: "Experience", content: "", placeholder: "Experience" },
     { header: "Studies", content: "", placeholder: "Studies" },
@@ -31,20 +34,21 @@ const EditResume = ({ templateIndex = null, templateData = null, onBack }) => {
     },
   ]);
 
-  const [aiInstructions, setAiInstructions] = useState("");
+  // Optional notes/instructions for the AI
+  const [aiNotes, setAiNotes] = useState("");
 
+  // UI states
   const [isGenerating, setIsGenerating] = useState(false);
-  const [generatedHtmlRaw, setGeneratedHtmlRaw] = useState("");
-  const [pageImages, setPageImages] = useState([]);
   const [isConverting, setIsConverting] = useState(false);
 
-  // Remove style/link stylesheet tags from template data so template CSS
-  // does not leak into the app's global styles when rendering as HTML
+  // Generated outputs
+  const [generatedHtml, setGeneratedHtml] = useState("");
+  const [pageImages, setPageImages] = useState([]);
+
+  // Utility: remove <style> and stylesheet <link> tags from template HTML
   const stripTemplateStyles = (html) => {
     if (!html) return html;
-    // Remove <style>...</style>
     let cleaned = html.replace(/<style[\s\S]*?<\/style>/gi, "");
-    // Remove stylesheet <link ... rel="stylesheet" ... />
     cleaned = cleaned.replace(
       /<link\b[^>]*rel=["']?stylesheet["']?[^>]*>/gi,
       ""
@@ -52,61 +56,43 @@ const EditResume = ({ templateIndex = null, templateData = null, onBack }) => {
     return cleaned;
   };
 
+  // If a template HTML was provided, show it as the initial preview (styles stripped)
   useEffect(() => {
-    if (templateData) {
-      setGeneratedHtmlRaw(stripTemplateStyles(templateData));
-    }
+    if (templateData) setGeneratedHtml(stripTemplateStyles(templateData));
   }, [templateData]);
 
+  // Helpful debug: print current resume state when relevant fields change
   useEffect(() => {
-    const formData = {
-      personalInfo: {
-        name: data.name,
-        title: data.title,
-        email: data.email,
-        phone: data.phone,
-      },
-      sections: sections.map((sec) => ({
-        section_about: sec.header,
-        content: sec.content,
-      })),
-      building_instructions_for_ai: aiInstructions,
-      template_style: "html_code",
-    };
-    console.log("Resume Data:", formData);
-  }, [data, sections, aiInstructions]);
+    // keep lightweight logging for debugging
+    // const snapshot = { personalInfo: personal, sections: sections.map((s) => ({ section_about: s.header, content: s.content })), aiNotes };
+    // console.log("Resume snapshot:", snapshot);
+  }, [personal, sections, aiNotes]);
 
-  const handleChange = (e) => {
+  // Handlers for personal fields
+  const handlePersonalChange = (e) => {
     const { name, value } = e.target;
-    setData((s) => ({ ...s, [name]: value }));
+    setPersonal((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Section helpers
   const handleSectionChange = (index, field, value) => {
-    setSections((s) => {
-      const copy = [...s];
+    setSections((prev) => {
+      const copy = [...prev];
       copy[index] = { ...copy[index], [field]: value };
       return copy;
     });
   };
 
-  const addSection = () => {
+  const addSection = () =>
     setSections((s) => [
       ...s,
       { header: "", content: "", placeholder: "New Section" },
     ]);
-  };
-
-  const removeSection = (index) => {
+  const removeSection = (index) =>
     setSections((s) => s.filter((_, i) => i !== index));
-  };
 
   const clearAll = () => {
-    setData({
-      name: "",
-      title: "",
-      email: "",
-      phone: "",
-    });
+    setPersonal({ name: "", title: "", email: "", phone: "" });
     setSections([
       { header: "Experience", content: "", placeholder: "Experience" },
       { header: "Studies", content: "", placeholder: "Studies" },
@@ -116,67 +102,74 @@ const EditResume = ({ templateIndex = null, templateData = null, onBack }) => {
         placeholder: "Technical Skills List",
       },
     ]);
-    setAiInstructions("");
+    setAiNotes("");
+    setGeneratedHtml("");
+    setPageImages([]);
   };
 
+  // Create the payload structure for Gemini (centralized for easy edits)
+  const createGeminiPayload = (overrides = {}) => {
+    return {
+      personalInfo: personal,
+      sections: sections.map((s) => ({
+        section_about: s.header,
+        content: s.content,
+      })),
+      building_instructions_for_ai:
+        aiNotes || "strictly based on the provided html code structure",
+      template_style: "professional",
+      reference_html: templateData || "",
+      ...overrides,
+    };
+  };
+
+  // Build the prompt payload used for AI generation (uses centralized payload)
+  const buildPromptForAI = () => {
+    const payload = createGeminiPayload();
+
+    const dataLines = [
+      `- Name: ${payload.personalInfo.name}`,
+      `- Title: ${payload.personalInfo.title}`,
+      `- Email: ${payload.personalInfo.email}`,
+      `- Phone: ${payload.personalInfo.phone}`,
+    ];
+    const sectionsText = payload.sections
+      .map((s) => `- ${s.section_about}: ${s.content}`)
+      .join("\n");
+
+    const fullPrompt = `You are an HTML resume generator. Generate only valid HTML (single-file) without any explanations or markdown formatting. Use the reference HTML structure provided (if any) as the visual/layout guide and fill it with the resume data. Do NOT add any extra text or commentary.\n\nReference HTML structure (use for guidance only):\n${
+      payload.reference_html || "(none)"
+    }\n\nGenerate a professional A4 HTML resume (single-file) based on the data below. Return ONLY the complete HTML markup (including inline CSS). No explanations or other markup formats.\n\n${dataLines.join(
+      "\n"
+    )}\n\nSections:\n${sectionsText}\n\nAdditional Instructions: ${
+      payload.building_instructions_for_ai
+    }`;
+
+    return fullPrompt;
+  };
+
+  // Generate resume HTML using Google Generative AI (Gemini)
   const generateResumeWithAI = async () => {
     setIsGenerating(true);
-
     try {
-      const formData = {
-        personalInfo: {
-          name: data.name,
-          title: data.title,
-          email: data.email,
-          phone: data.phone,
-        },
-        sections: sections.map((sec) => ({
-          section_about: sec.header,
-          content: sec.content,
-        })),
-        building_instructions_for_ai: aiInstructions,
-        template_style: "professional",
-        reference_html: templateData || "",
-      };
-
-      const prompt = `Generate a professional A4 HTML resume (single-file) based on the data below.\nReturn ONLY the complete HTML markup (including inline CSS if needed) and nothing else — no explanations and no other markup formats. We will render this HTML and convert it to A4 PDF on the client.\n\nPersonal Info:\n- Name: ${
-        formData.personalInfo.name
-      }\n- Title: ${formData.personalInfo.title}\n- Email: ${
-        formData.personalInfo.email
-      }\n- Phone: ${
-        formData.personalInfo.phone
-      }\n\nSections:\n${formData.sections
-        .map((s) => `- ${s.section_about}: ${s.content}`)
-        .join("\n")}\n\nAdditional Instructions: ${
-        formData.building_instructions_for_ai || "None"
-      }`;
-
       const apiKey = process.env.REACT_APP_GEMINI_API_KEY;
-
       if (!apiKey) {
         alert("API key not found. Please restart the development server.");
         return;
       }
 
-      console.log("Using API Key:", apiKey.substring(0, 10) + "...");
-
       const genAI = new GoogleGenerativeAI(apiKey);
       const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
-      const fullPrompt = `You are an HTML resume generator. Generate only valid HTML (single-file) without any explanations or markdown formatting. Use the reference HTML structure provided (if any) as the visual/layout guide and fill it with the resume data. Do NOT add any extra text or commentary.\n\nReference HTML structure (use for guidance only):\n${
-        templateData || "(none)"
-      }\n\n${prompt}`;
-
-      const result = await model.generateContent(fullPrompt);
+      const prompt = buildPromptForAI();
+      const result = await model.generateContent(prompt);
       const response = await result.response;
       const htmlCode = await response.text();
 
-      // store the raw HTML exactly as received and display it in the preview
-      setGeneratedHtmlRaw(htmlCode);
-      // convert the HTML into A4-sized page images for scrollable preview
+      setGeneratedHtml(htmlCode);
       await convertHtmlToA4Images(htmlCode);
-    } catch (error) {
-      console.error("Error generating resume:", error);
+    } catch (err) {
+      console.error("Error generating resume:", err);
       alert(
         "Failed to generate resume. Please check your API key and try again."
       );
@@ -185,15 +178,14 @@ const EditResume = ({ templateIndex = null, templateData = null, onBack }) => {
     }
   };
 
-  // Convert an HTML string into A4-sized PNG images (array of data URLs)
+  // Convert HTML -> A4 page images for preview and PDF export
   const convertHtmlToA4Images = async (html) => {
     setIsConverting(true);
     setPageImages([]);
     try {
-      // create offscreen container
       const container = document.createElement("div");
-      container.style.width = "794px"; // A4 width at ~96dpi
-      container.style.minHeight = "1123px"; // A4 height at ~96dpi
+      container.style.width = "794px"; // roughly A4 width at 96dpi
+      container.style.minHeight = "1123px";
       container.style.position = "fixed";
       container.style.left = "-9999px";
       container.style.top = "0";
@@ -214,7 +206,7 @@ const EditResume = ({ templateIndex = null, templateData = null, onBack }) => {
         return;
       }
 
-      const scale = 2; // increase resolution
+      const scale = 2;
       const canvas = await html2canvas(container, {
         scale,
         useCORS: true,
@@ -223,7 +215,7 @@ const EditResume = ({ templateIndex = null, templateData = null, onBack }) => {
         width: container.offsetWidth,
       });
 
-      const pageHeight = Math.round(1123 * scale); // A4 height in px at scale
+      const pageHeight = Math.round(1123 * scale);
       const totalHeight = canvas.height;
       const pages = [];
 
@@ -261,18 +253,16 @@ const EditResume = ({ templateIndex = null, templateData = null, onBack }) => {
     }
   };
 
-  // Download generated pages as a PDF. If page images are not available,
-  // convert the generated HTML first.
+  // Export the previewed pages as PDF
   const downloadPdf = async () => {
     try {
-      if ((!pageImages || pageImages.length === 0) && !generatedHtmlRaw) {
+      if ((!pageImages || pageImages.length === 0) && !generatedHtml) {
         alert("Nothing to download. Generate the resume first.");
         return;
       }
 
-      if ((!pageImages || pageImages.length === 0) && generatedHtmlRaw) {
-        // ensure pageImages are generated
-        await convertHtmlToA4Images(generatedHtmlRaw);
+      if ((!pageImages || pageImages.length === 0) && generatedHtml) {
+        await convertHtmlToA4Images(generatedHtml);
       }
 
       const imgs = pageImages && pageImages.length ? pageImages : [];
@@ -281,7 +271,6 @@ const EditResume = ({ templateIndex = null, templateData = null, onBack }) => {
         return;
       }
 
-      // Create PDF instance (try modern constructor, fallback to older)
       let pdf;
       try {
         pdf = new jsPDF({ orientation: "portrait", unit: "px", format: "a4" });
@@ -297,12 +286,11 @@ const EditResume = ({ templateIndex = null, templateData = null, onBack }) => {
         pdf.addImage(img, "PNG", 0, 0, pageWidth, pageHeight);
       });
 
-      const rawTitle = data && data.title ? data.title : "resume";
+      const rawTitle = personal && personal.title ? personal.title : "resume";
       const safeTitle = rawTitle
         .trim()
         .replace(/[^a-z0-9\-_. ]/gi, "")
         .replace(/\s+/g, "_");
-
       pdf.save(`${safeTitle || "resume"}.pdf`);
     } catch (err) {
       console.error("PDF download error:", err);
@@ -312,25 +300,7 @@ const EditResume = ({ templateIndex = null, templateData = null, onBack }) => {
 
   return (
     <section className="resume-section-container templates-section">
-      <div className="edit-resume-topbar" style={{ marginBottom: 16 }}>
-        {/* <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <button
-            className="btn btn-ghost"
-            onClick={() => {
-              if (onBack) onBack();
-            }}
-          >
-            ← Back
-          </button>
-          <h2 style={{ margin: 0 }}>
-            Editing Template{" "}
-            {templateIndex !== null ? `#${templateIndex + 1}` : ""}
-          </h2>
-        </div>
-        {templateData && (
-          <div style={{ color: "#6c757d" }}>Template data available</div>
-        )} */}
-      </div>
+      <div className="edit-resume-topbar" style={{ marginBottom: 16 }} />
 
       <div className="resume-left">
         <h3 className="mb-3">Enter Resume Data</h3>
@@ -341,8 +311,8 @@ const EditResume = ({ templateIndex = null, templateData = null, onBack }) => {
             <input
               name="name"
               placeholder="e.g. John Doe"
-              value={data.name}
-              onChange={handleChange}
+              value={personal.name}
+              onChange={handlePersonalChange}
             />
           </div>
           <div className="form-group">
@@ -350,8 +320,8 @@ const EditResume = ({ templateIndex = null, templateData = null, onBack }) => {
             <input
               name="title"
               placeholder="e.g. Full-Stack Developer"
-              value={data.title}
-              onChange={handleChange}
+              value={personal.title}
+              onChange={handlePersonalChange}
             />
           </div>
           <div className="form-group">
@@ -359,8 +329,8 @@ const EditResume = ({ templateIndex = null, templateData = null, onBack }) => {
             <input
               name="email"
               placeholder="e.g. john.doe@example.com"
-              value={data.email}
-              onChange={handleChange}
+              value={personal.email}
+              onChange={handlePersonalChange}
             />
           </div>
           <div className="form-group">
@@ -368,13 +338,11 @@ const EditResume = ({ templateIndex = null, templateData = null, onBack }) => {
             <input
               name="phone"
               placeholder="e.g. (123) 456-7890"
-              value={data.phone}
-              onChange={handleChange}
+              value={personal.phone}
+              onChange={handlePersonalChange}
             />
           </div>
         </div>
-
-        {/* <hr className="divider" /> */}
 
         {sections.map((sec, idx) => (
           <div key={idx} className="section-block">
@@ -400,6 +368,7 @@ const EditResume = ({ templateIndex = null, templateData = null, onBack }) => {
                 <line x1="6" y1="6" x2="18" y2="18"></line>
               </svg>
             </button>
+
             <div className="form-group">
               <label>Section Header</label>
               <input
@@ -428,9 +397,9 @@ const EditResume = ({ templateIndex = null, templateData = null, onBack }) => {
           <input
             type="text"
             className="ai-instructions-input"
-            placeholder="Add additional instructions to AI about building (optional)"
-            value={aiInstructions}
-            onChange={(e) => setAiInstructions(e.target.value)}
+            placeholder="Add additional instructions to AI (optional)"
+            value={aiNotes}
+            onChange={(e) => setAiNotes(e.target.value)}
           />
         </div>
 
@@ -457,6 +426,7 @@ const EditResume = ({ templateIndex = null, templateData = null, onBack }) => {
             </svg>
             <span>Add Section</span>
           </button>
+
           <button
             onClick={clearAll}
             className="btn-secondary"
@@ -465,6 +435,7 @@ const EditResume = ({ templateIndex = null, templateData = null, onBack }) => {
           >
             <span>Clear All</span>
           </button>
+
           <button
             className="btn-primary"
             onClick={generateResumeWithAI}
@@ -484,7 +455,6 @@ const EditResume = ({ templateIndex = null, templateData = null, onBack }) => {
             marginBottom: "15px",
           }}
         >
-          {/* <h3 style={{ margin: 0 }}>Preview</h3> */}
           {templateIndex !== null && (
             <img
               src={[t1, t2, t3, t4, t5, t6, t7, t8, t9][templateIndex]}
@@ -499,28 +469,25 @@ const EditResume = ({ templateIndex = null, templateData = null, onBack }) => {
               }}
             />
           )}
+
           <div style={{ marginLeft: 12, display: "flex", gap: 8 }}>
             <button
               className="btn btn-secondary"
-              onClick={() => {
-                if (onBack) onBack();
-              }}
+              onClick={() => onBack && onBack()}
             >
               ← Back
             </button>
             <button
               className="btn btn-primary"
               onClick={downloadPdf}
-              disabled={
-                isConverting ||
-                (pageImages && pageImages.length > 0 ? false : false)
-              }
+              disabled={isConverting}
               title="Download resume as PDF"
             >
               Download PDF
             </button>
           </div>
         </div>
+
         <div id="resume-preview" className="resume-preview">
           {(isGenerating || isConverting) && (
             <div className="preview-loader" role="status" aria-live="polite">
@@ -532,6 +499,7 @@ const EditResume = ({ templateIndex = null, templateData = null, onBack }) => {
               </div>
             </div>
           )}
+
           {pageImages && pageImages.length > 0 ? (
             <div className="pdf-image-preview">
               {isConverting && (
@@ -552,20 +520,20 @@ const EditResume = ({ templateIndex = null, templateData = null, onBack }) => {
                 />
               ))}
             </div>
-          ) : generatedHtmlRaw ? (
+          ) : generatedHtml ? (
             <div
               className="compiled-html-box"
-              // Render the returned HTML directly into the preview area
-              dangerouslySetInnerHTML={{ __html: generatedHtmlRaw }}
+              dangerouslySetInnerHTML={{ __html: generatedHtml }}
             />
           ) : (
             <div className="resume-root">
               <div className="resume-header">
-                <h1>{data.name || "Your Name"}</h1>
-                <div>{data.title}</div>
+                <h1>{personal.name || "Your Name"}</h1>
+                <div>{personal.title}</div>
                 <div>
-                  {data.email} {data.email && data.phone ? " | " : ""}{" "}
-                  {data.phone}
+                  {personal.email}
+                  {personal.email && personal.phone ? " | " : ""}
+                  {personal.phone}
                 </div>
               </div>
 

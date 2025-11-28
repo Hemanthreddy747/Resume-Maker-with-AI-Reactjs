@@ -1,41 +1,223 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Simple Page</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Professional Resume</title>
 
-  <style>
-    body {
-      margin: 0;
-      padding: 40px;
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-    }
-    .box {
-      max-width: 500px;
-      margin: auto;
-      padding: 30px;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-    }
-    h1 {
-      margin: 0 0 10px;
-      font-weight: 600;
-    }
-    p {
-      margin: 0;
-      color: #555;
-    }
-  </style>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    background: #e9eef3;
+    font-family: "Segoe UI", Arial, sans-serif;
+  }
+
+  .resume-container {
+    width: 900px;
+    background: #fff;
+    margin: 40px auto;
+    display: flex;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 6px 30px rgba(0,0,0,0.1);
+  }
+
+  /* LEFT SIDEBAR */
+  .left {
+    width: 32%;
+    background: #1f2937;
+    color: #fff;
+    padding: 40px 30px;
+  }
+
+  .profile-img {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: auto;
+    border: 4px solid #fff;
+  }
+
+  .profile-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .left h2 {
+    margin-top: 25px;
+    font-size: 22px;
+    border-bottom: 2px solid #fff5;
+    padding-bottom: 6px;
+    margin-bottom: 15px;
+  }
+
+  .left p, .left li {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #e5e7eb;
+  }
+
+  .left ul {
+    padding-left: 18px;
+  }
+
+  /* RIGHT SIDE */
+  .right {
+    width: 68%;
+    padding: 45px 50px;
+    background: #fff;
+  }
+
+  .header h1 {
+    margin: 0;
+    font-size: 36px;
+    font-weight: 700;
+  }
+
+  .header h3 {
+    margin: 6px 0 25px;
+    font-weight: 500;
+    color: #374151;
+  }
+
+  .section {
+    margin-bottom: 35px;
+  }
+
+  .section h2 {
+    margin-bottom: 12px;
+    font-size: 22px;
+    color: #111827;
+    border-left: 5px solid #2563eb;
+    padding-left: 12px;
+    font-weight: 700;
+  }
+
+  .section p, .section li {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #374151;
+  }
+
+  .job {
+    margin-bottom: 20px;
+  }
+
+  .job h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .job span {
+    font-size: 14px;
+    color: #6b7280;
+  }
+
+  .job ul {
+    margin-top: 10px;
+    padding-left: 18px;
+  }
+</style>
 </head>
+
 <body>
 
-  <div class="box">
-    <h1>Hello!</h1>
-    <p>This is a simple modern HTML page.</p>
+<div class="resume-container">
+
+  <!-- LEFT -->
+  <div class="left">
+    <div class="profile-img">
+      <img src="https://i.pravatar.cc/300" alt="profile">
+    </div>
+
+    <h2>Contact</h2>
+    <p>Email: johndoe@gmail.com</p>
+    <p>Phone: +91 98765 12345</p>
+    <p>Location: Bangalore, India</p>
+
+    <h2>Skills</h2>
+    <ul>
+      <li>React, Next.js, Node.js</li>
+      <li>JavaScript, TypeScript</li>
+      <li>MongoDB, PostgreSQL</li>
+      <li>AWS, Firebase, Docker</li>
+      <li>Microservices, REST APIs</li>
+    </ul>
+
+    <h2>Tools</h2>
+    <ul>
+      <li>VS Code</li>
+      <li>Git / GitHub</li>
+      <li>Postman</li>
+      <li>Figma</li>
+      <li>Jira / Trello</li>
+    </ul>
+
+    <h2>Languages</h2>
+    <ul>
+      <li>English</li>
+      <li>Hindi</li>
+    </ul>
   </div>
+
+  <!-- RIGHT -->
+  <div class="right">
+    <div class="header">
+      <h1>John Doe</h1>
+      <h3>Senior Software Developer</h3>
+    </div>
+
+    <div class="section">
+      <h2>Profile Summary</h2>
+      <p>
+        Highly skilled software engineer with 7+ years of experience building enterprise-level applications, optimizing system performance, and architecting scalable web platforms. Known for clean code, modern UI/UX implementation, and result-oriented development.
+      </p>
+    </div>
+
+    <div class="section">
+      <h2>Experience</h2>
+
+      <div class="job">
+        <h3>Senior Software Developer — ABC Technologies</h3>
+        <span>2021 — Present</span>
+        <ul>
+          <li>Developed high-traffic web apps serving 3M+ active users.</li>
+          <li>Designed microservices that reduced server cost by 30%.</li>
+          <li>Led a team of 6 developers delivering critical product modules.</li>
+        </ul>
+      </div>
+
+      <div class="job">
+        <h3>Full Stack Developer — XYZ Solutions</h3>
+        <span>2018 — 2021</span>
+        <ul>
+          <li>Built dashboards, automation tools, and REST APIs.</li>
+          <li>Integrated cloud services and improved app speed by 40%.</li>
+          <li>Worked on analytics modules using Node + React + MongoDB.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Projects</h2>
+      <ul>
+        <li>AI-based ticket routing system — Improved efficiency by 35%.</li>
+        <li>Invoice automation engine — Eliminated manual workload by 90%.</li>
+        <li>Real-time analytics dashboard — Powered by WebSockets.</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Education</h2>
+      <p>B.Tech in Computer Science — 2018</p>
+    </div>
+  </div>
+
+</div>
 
 </body>
 </html>

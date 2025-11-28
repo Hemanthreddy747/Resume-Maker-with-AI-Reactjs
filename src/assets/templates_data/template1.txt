@@ -1,41 +1,244 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Simple Page</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Professional 2-Page Resume</title>
 
-  <style>
-    body {
-      margin: 0;
-      padding: 40px;
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-    }
-    .box {
-      max-width: 500px;
-      margin: auto;
-      padding: 30px;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-    }
-    h1 {
-      margin: 0 0 10px;
-      font-weight: 600;
-    }
-    p {
-      margin: 0;
-      color: #555;
-    }
-  </style>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    background: #e9eaec;
+    font-family: "Segoe UI", Arial, sans-serif;
+  }
+
+  .page {
+    width: 850px;
+    background: #fff;
+    margin: 40px auto;
+    padding: 50px;
+    box-sizing: border-box;
+    border-radius: 12px;
+    box-shadow: 0px 5px 25px rgba(0,0,0,0.15);
+    page-break-after: always;
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 3px solid #eee;
+    padding-bottom: 20px;
+  }
+
+  .name {
+    font-size: 34px;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .role {
+    color: #666;
+    font-size: 18px;
+    margin-top: 4px;
+  }
+
+  .contact {
+    text-align: right;
+    font-size: 14px;
+    color: #444;
+  }
+
+  h2 {
+    font-size: 22px;
+    border-left: 6px solid #007bff;
+    padding-left: 10px;
+    margin-bottom: 15px;
+    margin-top: 40px;
+    color: #222;
+  }
+
+  p, li {
+    font-size: 15px;
+    color: #333;
+    line-height: 1.6;
+  }
+
+  ul {
+    margin-top: 8px;
+    padding-left: 20px;
+  }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+
+  .skill-box {
+    margin-bottom: 8px;
+  }
+
+  .skill-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+
+  .skill-bar {
+    height: 8px;
+    background: #007bff;
+    border-radius: 8px;
+    width: var(--level);
+  }
+
+  .project-box {
+    margin-bottom: 25px;
+  }
+
+  .signature {
+    margin-top: 40px;
+    font-size: 17px;
+    font-weight: bold;
+  }
+</style>
 </head>
+
 <body>
 
-  <div class="box">
-    <h1>Hello!</h1>
-    <p>This is a simple modern HTML page.</p>
+<!-- PAGE 1 -->
+<div class="page">
+
+  <div class="header">
+    <div>
+      <h1 class="name">John Doe</h1>
+      <div class="role">Senior Software Developer</div>
+    </div>
+    <div class="contact">
+      johndoe@example.com<br>
+      +91 98765 12345<br>
+      www.johndoe.dev
+    </div>
   </div>
+
+  <h2>Profile Summary</h2>
+  <p>
+    Senior software developer with 7+ years of experience building scalable web applications, 
+    cloud-based systems, microservices, and high-performance backend solutions. Expert in React, 
+    Node.js, system architecture, and API engineering. Known for clean code, system optimization, 
+    and delivering production-grade enterprise software.
+  </p>
+
+  <h2>Technical Skills</h2>
+  <div class="two-col">
+    <div>
+      <div class="skill-box">
+        <div class="skill-title">Frontend</div>
+        <div class="skill-bar" style="--level: 95%"></div>
+      </div>
+
+      <div class="skill-box">
+        <div class="skill-title">Backend / APIs</div>
+        <div class="skill-bar" style="--level: 92%"></div>
+      </div>
+
+      <div class="skill-box">
+        <div class="skill-title">Databases</div>
+        <div class="skill-bar" style="--level: 85%"></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="skill-box">
+        <div class="skill-title">Cloud / DevOps</div>
+        <div class="skill-bar" style="--level: 80%"></div>
+      </div>
+
+      <div class="skill-box">
+        <div class="skill-title">System Design</div>
+        <div class="skill-bar" style="--level: 88%"></div>
+      </div>
+
+      <div class="skill-box">
+        <div class="skill-title">Automation Tools</div>
+        <div class="skill-bar" style="--level: 78%"></div>
+      </div>
+    </div>
+  </div>
+
+  <h2>Work Experience</h2>
+
+  <h3>Senior Software Developer • ABC Technologies (2021–Present)</h3>
+  <ul>
+    <li>Architected microservice-based system serving 3M+ monthly users.</li>
+    <li>Increased app performance by 45% by optimizing rendering pipelines.</li>
+    <li>Led a team of 6 developers building complex enterprise dashboards.</li>
+    <li>Reduced cloud costs by 30% by optimizing server scaling strategies.</li>
+  </ul>
+
+  <h3>Software Developer • XYZ Solutions (2018–2021)</h3>
+  <ul>
+    <li>Developed advanced reporting and analytics modules for enterprise clients.</li>
+    <li>Built real-time applications using WebSockets and Node.js.</li>
+    <li>Implemented secure authentication modules for SaaS platforms.</li>
+  </ul>
+
+  <h2>Education</h2>
+  <p>B.Tech in Computer Science — 2018</p>
+
+</div>
+
+<!-- PAGE 2 -->
+<div class="page">
+
+  <h2>Major Projects</h2>
+
+  <div class="project-box">
+    <h3>Enterprise Automation Suite</h3>
+    <p>
+      Designed a full automation suite that integrates billing, CRM, customer support, and 
+      analytics. Reduced manual workload by 70% across departments.
+    </p>
+  </div>
+
+  <div class="project-box">
+    <h3>E-Commerce Real-Time Insights Dashboard</h3>
+    <p>
+      Built a real-time e-commerce analytics dashboard with product heatmaps, traffic tracking, 
+      and automated customer segmentation using Node.js and React.
+    </p>
+  </div>
+
+  <div class="project-box">
+    <h3>AI Ticket Classification Engine</h3>
+    <p>
+      Developed an AI/NLP-based auto-tagging engine that classifies support tickets with 
+      92% accuracy, improving response time by 35%.
+    </p>
+  </div>
+
+  <h2>Certifications</h2>
+  <ul>
+    <li>AWS Certified Developer Associate</li>
+    <li>Google Data Analytics Professional Certificate</li>
+    <li>Microsoft Azure Fundamentals (AZ-900)</li>
+  </ul>
+
+  <h2>Additional Information</h2>
+  <ul>
+    <li>Languages: English, Hindi</li>
+    <li>Hobbies: Photography, long-drives, UI/UX design</li>
+    <li>Volunteer Work: Mentor at coding bootcamp</li>
+  </ul>
+
+  <h2>Declaration</h2>
+  <p>
+    I confirm that the information provided is accurate and complete.
+  </p>
+
+  <div class="signature">John Doe</div>
+
+</div>
 
 </body>
 </html>
